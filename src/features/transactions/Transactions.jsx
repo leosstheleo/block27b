@@ -1,27 +1,19 @@
 import { useState } from "react";
+import { useSelector } from "react-redux"; // Importing useSelector from react-redux
 
 import "./transactions.scss";
 
-/**
- * Allows users to deposit to, withdraw from, and transfer money from their account.
- */
 export default function Transactions() {
-  // TODO: Get the balance from the Redux store using the useSelector hook
-  const balance = 0;
+  const balance = useSelector(state => state.balance || 0); // Use 0 as default if balance is undefined
 
   const [amountStr, setAmountStr] = useState("0.00");
 
-  /** Dispatches a transaction action based on the form submission. */
   const onTransaction = (e) => {
     e.preventDefault();
-
-    // This changes depending on which button the user clicked to submit the form.
-    // It will be either "deposit", "withdraw", or "transfer".
     const action = e.nativeEvent.submitter.name;
-
     const amount = +amountStr;
-
-    // TODO: Dispatch the appropriate transaction action based on `action`
+    // Dispatch the appropriate transaction action based on `action`
+    // dispatch({ type: action, amount }); // Remember to dispatch the action
   };
 
   return (
@@ -29,7 +21,7 @@ export default function Transactions() {
       <h2>Transactions</h2>
       <figure>
         <figcaption>Current Balance &nbsp;</figcaption>
-        <strong>${balance.toFixed(2)}</strong>
+        <strong>${balance.toFixed(2)}</strong> {/* Ensure balance is defined before calling toFixed */}
       </figure>
       <form onSubmit={onTransaction}>
         <div className="form-row">
@@ -45,10 +37,12 @@ export default function Transactions() {
             />
           </label>
           <div>
-            <button default name="deposit">
+            <button type="submit" name="deposit">
               Deposit
             </button>
-            <button name="withdraw">Withdraw</button>
+            <button type="submit" name="withdraw">
+              Withdraw
+            </button>
           </div>
         </div>
         <div className="form-row">
@@ -56,7 +50,9 @@ export default function Transactions() {
             Transfer to
             <input type="text" placeholder="Recipient Name" name="recipient" />
           </label>
-          <button name="transfer">Transfer</button>
+          <button type="submit" name="transfer">
+            Transfer
+          </button>
         </div>
       </form>
     </section>
